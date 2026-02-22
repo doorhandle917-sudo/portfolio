@@ -3,501 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SEOJIAF portfolio website, does anyone actually see this text?">
     <title>SEOJIAF</title>
-    <style>
-        * {
-            margin:  0;
-            padding: 0;
-            box-sizing:  border-box;
-        }
-        
-        : root {
-            --bg:  #dadada;
-            --text: #181818;
-            --text-dim: #4a4a4a;
-            --accent: #0066cc;
-            --accent-visited: #551a8b;
-            --border: #999;
-            --card-bg: rgba(0, 0, 0, 0.05);
-            --highlight: rgba(255, 193, 7, 0.2);
-            --highlight-border: #ffc107;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #1a1a1a;
-                --text: #e0e0e0;
-                --text-dim: #999;
-                --accent: #58a6ff;
-                --accent-visited: #8e96f0;
-                --border: #444;
-                --card-bg:  rgba(255, 255, 255, 0.05);
-                --highlight: rgba(255, 193, 7, 0.15);
-                --highlight-border:  #ffc107;
-            }
-        }
-        
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            padding: 1rem;
-            max-width: 900px;
-            margin: 0 auto;
-            transition: background 0.3s, color 0.3s;
-        }
-        
-        header {
-            text-align: center;
-            margin:  2rem 0 3rem;
-            padding-bottom: 2rem;
-            border-bottom:  2px solid var(--border);
-        }
-        
-        .ascii-art {
-            font-family: monospace;
-            white-space: pre;
-            font-size: 0.5rem;
-            line-height: 1.2;
-            overflow-x: auto;
-            margin: 1rem 0;
-            opacity: 0.8;
-        }
-        
-        h1 {
-            font-size: 2.5em;
-            font-weight: 900;
-            margin:  0.5rem 0;
-        }
-        
-        h2 {
-            margin:  2. 5rem 0 1rem;
-            font-size: 1.75em;
-            font-weight:  700;
-            border-bottom: 2px solid var(--text);
-            padding-bottom: 0.3rem;
-        }
-        
-        h3 {
-            margin: 1. 5rem 0 0.75rem;
-            font-size:  1.3em;
-            font-weight:  600;
-        }
-        
-        .tagline {
-            font-size:  1.2em;
-            color: var(--text-dim);
-            margin:  0.5rem 0 1rem;
-        }
-        
-        .intro {
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin: 2rem 0;
-        }
-        
-        p {
-            margin: 1rem 0;
-        }
-        
-        a {
-            color: var(--accent);
-            text-decoration:  none;
-            border-bottom: 1px solid transparent;
-            transition: border-bottom 0.2s;
-        }
-        
-        a:hover {
-            border-bottom:  1px solid currentColor;
-        }
-        
-        a:visited {
-            color: var(--accent-visited);
-        }
-        
-        .section {
-            margin: 3rem 0;
-        }
-        
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .about-card {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 5px;
-            border-left: 3px solid var(--accent);
-        }
-        
-        .about-card h3 {
-            margin-top: 0;
-        }
-        
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-        
-        .skill-item {
-            background: var(--card-bg);
-            padding:  1rem;
-            text-align: center;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        
-        .skill-item:hover {
-            transform: translateY(-2px);
-        }
-        
-        .project-card {
-            background: var(--card-bg);
-            padding:  1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 5px;
-            border-left: 4px solid var(--accent);
-        }
-        
-        .project-card h3 {
-            margin-top: 0;
-            font-size: 1.4em;
-        }
-        
-        .project-meta {
-            font-size: 0.9em;
-            color: var(--text-dim);
-            margin:  0.5rem 0;
-        }
-        
-        . project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-        
-        .tech-tag {
-            background: var(--accent);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 3px;
-            font-size:  0.85em;
-            font-weight:  600;
-        }
-        
-        .project-links {
-            margin-top: 1rem;
-        }
-        
-        .project-links a {
-            margin-right: 1. 5rem;
-            font-weight: 600;
-        }
-        
-        .manifesto-callout {
-            background: var(--highlight);
-            border:  2px dashed var(--highlight-border);
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 5px;
-        }
-        
-        .manifesto-callout h3 {
-            margin-top: 0;
-        }
-        
-        .philosophy {
-            margin: 1.5rem 0;
-            padding-left: 1rem;
-            border-left: 3px solid var(--text);
-        }
-        
-        .stats {
-            background: var(--card-bg);
-            border:  2px solid var(--border);
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 5px;
-            font-family: monospace;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            display: block;
-        }
-        
-        .stat-label {
-            font-size:  0.9em;
-            opacity: 0.8;
-        }
-        
-        .contact-section {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 5px;
-            text-align: center;
-            margin: 3rem 0;
-        }
-        
-        .contact-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin:  1.5rem 0;
-            font-size: 1.1em;
-        }
-        
-        .contact-links a {
-            font-weight: 600;
-        }
-        
-        footer {
-            margin:  4rem 0 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid var(--border);
-            text-align: center;
-            color: var(--text-dim);
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: #28a745;
-            color: white;
-            border-radius: 3px;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin:  0.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            body {
-                padding: 0.5rem;
-            }
-            
-            h1 {
-                font-size: 1.8em;
-            }
-            
-            h2 {
-                font-size: 1.4em;
-            }
-            
-            .ascii-art {
-                font-size: 0.35rem;
-            }
-            
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .skills-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-            
-            .contact-links {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=General+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <header>
-        <div class="ascii-art">
- ____  _____ ___       _ ___    _    _____ 
-/ ___|| ____/ _ \     | |_ _|  / \  |  ___|
-\___ \|  _|| | | |_   | || |  / _ \ | |_   
- ___) | |__| |_| | |__| || | / ___ \|  _|  
-|____/|_____\___/ \____/|___/_/   \_\_|    
+
+<!-- Cursor -->
+<div id="cursor" class="cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+    <div class="cursor-label"></div>
+</div>
+
+<!-- Loader -->
+<div id="loader" class="loader">
+    <div class="loader-inner">
+        <div class="loader-text">
+            <span class="loader-line">SEOJIAF</span>
         </div>
-        <h1>SEOJIAF</h1>
-        <p class="tagline">Developer • Minimalist • Performance Enthusiast</p>
-    </header>
-
-    <section class="section intro">
-        <p><strong>Hey, I'm SEOJIAF. </strong></p>
-        <p>I build fast, lean web experiences without the bloat.</p>
-        <p>I believe the web should be accessible, performant, and transparent. View source should be a learning tool, not a luxury.</p>
-    </section>
-
-    <section class="section">
-        <h2>About Me</h2>
-        <div class="about-grid">
-            <div class="about-card">
-                <h3>What I Do</h3>
-                <p>Full-stack web development with a focus on performance and simplicity. I write C, build servers, manage infrastructure, and create web experiences that load instantly.</p>
-            </div>
-            <div class="about-card">
-                <h3>Philosophy</h3>
-                <p>Constraints breed creativity. If your website needs 2MB of JavaScript to show text, something went wrong.</p>
-            </div>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <section class="section">
-        <h2>Skills & Tech</h2>
-        <div class="skills-grid">
-            <div class="skill-item">HTML/CSS</div>
-            <div class="skill-item">JavaScript</div>
-            <div class="skill-item">C</div>
-            <div class="skill-item">Git</div>
-            <div class="skill-item">Linux/Servers</div>
-            <div class="skill-item">Web Performance</div>
-            <div class="skill-item">System Design</div>
+<!-- Smooth scroll wrapper -->
+<div id="scroll-container">
+
+    <!-- NAV -->
+    <nav id="nav" class="nav">
+        <a href="#" class="nav-brand" data-cursor="link">seojiaf</a>
+        <div class="nav-links">
+            <a href="#work" class="nav-link" data-cursor="link">Work</a>
+            <a href="#about" class="nav-link" data-cursor="link">About</a>
+            <a href="#capabilities" class="nav-link" data-cursor="link">Skills</a>
+            <a href="#contact" class="nav-link" data-cursor="link">Contact</a>
         </div>
-    </section>
+    </nav>
 
-    <section class="section">
-        <h2>Projects</h2>
-        <div class="project-card">
-            <h3>Oryks.org</h3>
-            <p class="project-meta">Self-hosted infrastructure</p>
-            <p>A domain I host on my own server where me and friends run various projects, including our own Git server using Gitea.  Full control, no third-party dependencies.</p>
-            <div class="project-tech">
-                <span class="tech-tag">Self-Hosted</span>
-                <span class="tech-tag">Gitea</span>
-                <span class="tech-tag">Linux</span>
-            </div>
-            <div class="project-links">
-                <a href="https://gitea. oryks.org">Visit Gitea</a>
-            </div>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+            <div class="hero-grid"></div>
+            <div class="hero-orb orb-1"></div>
+            <div class="hero-orb orb-2"></div>
+            <div class="hero-orb orb-3"></div>
         </div>
 
-        <div class="project-card">
-            <h3>QuickTransfer</h3>
-            <p class="project-meta">Text transfer tool</p>
-            <p>A lightweight tool for transferring text between devices quickly and easily. Simple problem, simple solution.</p>
-            <div class="project-tech">
-                <span class="tech-tag">Web App</span>
-                <span class="tech-tag">Real-time</span>
+        <div class="hero-content">
+            <div class="hero-eyebrow">
+                <div class="eyebrow-line"></div>
+                <span>Systems & Infrastructure</span>
             </div>
-            <div class="project-links">
-                <a href="https://dev-quicktransfer.vercel.app/">Live Demo</a>
-            </div>
-        </div>
 
-        <div class="project-card">
-            <h3>Goot</h3>
-            <p class="project-meta">Git reimplementation in C</p>
-            <p>My own take on Git, written in C from scratch. It's rough around the edges, but it works—and I learned a ton building it.</p>
-            <div class="project-tech">
-                <span class="tech-tag">C</span>
-                <span class="tech-tag">Version Control</span>
-                <span class="tech-tag">Low-level</span>
-            </div>
-        </div>
-    </section>
+            <h1 class="hero-title">
+                <span class="title-line">
+                    <span class="title-word" data-char-split>Building</span>
+                </span>
+                <span class="title-line">
+                    <span class="title-word serif-italic" data-char-split>& operating</span>
+                </span>
+                <span class="title-line">
+                    <span class="title-word" data-char-split>self-hosted</span>
+                </span>
+                <span class="title-line">
+                    <span class="title-word gradient-fill" data-char-split>systems</span>
+                </span>
+            </h1>
 
-    <section class="section">
-        <div class="stats">
-            <h3>This Site's Stats</h3>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-value" id="filesize">~18kb</span>
-                    <span class="stat-label">Total Size</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Dependencies</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">0</span>
-                    <span class="stat-label">Build Steps</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">100%</span>
-                    <span class="stat-label">Readable Source</span>
-                </div>
-            </div>
-            <p style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
-                Load time:  Instant • npm packages: 0 • Accessibility: ✓ • Dark mode: ✓
+            <p class="hero-sub">
+                Designing, deploying, and maintaining developer<br>
+                infrastructure used by real users.
             </p>
+
+            <div class="hero-scroll-cta" data-cursor="scroll">
+                <div class="scroll-indicator">
+                    <div class="scroll-dot"></div>
+                </div>
+                <span>Scroll to explore</span>
+            </div>
+        </div>
+
+        <div class="hero-footer-row">
+            <span>Based in —</span>
+            <span>Available for projects</span>
+            <span>©2025</span>
         </div>
     </section>
 
-    <section class="section contact-section">
-        <h2>Get in Touch</h2>
-        <p>Interested in working together? Want to talk about minimal web development? Let's connect. </p>
-        <div class="contact-links">
-            <a href="https://github.com/SEOJIAF">GitHub</a>
-            <a href="https://gitea.oryks.org">Gitea</a>
+    <!-- WORK -->
+    <section id="work" class="section section-work">
+        <div class="section-header">
+            <span class="section-label">Selected Work</span>
+            <h2 class="section-heading">Projects</h2>
+        </div>
+
+        <div class="projects">
+
+            <a href="/projects/oryks.html" class="project" data-cursor="view" data-color="#6366f1">
+                <div class="project-image">
+                    <div class="project-image-inner" style="background: linear-gradient(135deg, #4f46e5, #7c3aed, #a78bfa);"></div>
+                    <div class="project-image-overlay">
+                        <span class="project-number">01</span>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <div class="project-tags">
+                        <span>Ongoing</span>
+                        <span>Linux</span>
+                        <span>Docker</span>
+                        <span>Networking</span>
+                    </div>
+                    <h3 class="project-title">Oryks Infrastructure</h3>
+                    <p class="project-desc">Private self-hosted infrastructure running Git, CI, and internal services on bare-metal Linux servers. Full control, zero third-party dependencies.</p>
+                    <div class="project-cta">
+                        <span>View Project</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <a href="/projects/goot.html" class="project" data-cursor="view" data-color="#ec4899">
+                <div class="project-image">
+                    <div class="project-image-inner" style="background: linear-gradient(135deg, #db2777, #ec4899, #f9a8d4);"></div>
+                    <div class="project-image-overlay">
+                        <span class="project-number">02</span>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <div class="project-tags">
+                        <span>2025</span>
+                        <span>C</span>
+                        <span>Filesystems</span>
+                    </div>
+                    <h3 class="project-title">Goot</h3>
+                    <p class="project-desc">Low-level Git reimplementation in C. Understanding object storage, repository layout, and filesystem behavior from the ground up.</p>
+                    <div class="project-cta">
+                        <span>View Project</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <a href="/projects/quicktransfer.html" class="project" data-cursor="view" data-color="#f59e0b">
+                <div class="project-image">
+                    <div class="project-image-inner" style="background: linear-gradient(135deg, #d97706, #f59e0b, #fcd34d);"></div>
+                    <div class="project-image-overlay">
+                        <span class="project-number">03</span>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <div class="project-tags">
+                        <span>2024</span>
+                        <span>WebSockets</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <h3 class="project-title">QuickTransfer</h3>
+                    <p class="project-desc">Real-time peer-to-peer text transfer optimized for low latency and zero persistence. Simple problem, elegant solution.</p>
+                    <div class="project-cta">
+                        <span>View Project</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
         </div>
     </section>
 
-    <footer>
-        <p><strong>Built with care, not bloat.</strong></p>
-        <p>Zero frameworks • Zero build tools • Zero regrets</p>
-        
-        <div>
-            <span class="badge" id="size-badge">✓ Under 20kb</span>
+    <!-- ABOUT -->
+    <section id="about" class="section section-about">
+        <div class="about-layout">
+            <div class="about-left">
+                <span class="section-label">About</span>
+                <h2 class="about-heading">
+                    I'm a student at <em>Skyro</em>, obsessed with how things work at the lowest level.
+                </h2>
+            </div>
+            <div class="about-right">
+                <div class="about-block">
+                    <h3>Craft</h3>
+                    <p>Full-stack web development with a focus on performance and simplicity. I write C, build servers, manage infrastructure, and create web experiences that load instantly.</p>
+                </div>
+                <div class="about-block">
+                    <h3>Philosophy</h3>
+                    <p>Constraints breed creativity. The best code is the code you don't ship. I care about understanding systems deeply — not just using them, but knowing why they work.</p>
+                </div>
+            </div>
         </div>
-        
-        <p style="margin-top: 2rem; font-size: 0.9em;">
-            © 2025 SEOJIAF. Made with HTML and CSS.
-        </p>
-        
-        <p style="margin-top: 1rem; font-size: 0.85em;">
-            Inspired by <a href="https://motherfuckingwebsite.com/">motherfuckingwebsite</a> • 
-            <a href="https://justinjackson.ca/words. html">words.html</a>
-        </p>
-    </footer>
+    </section>
 
-    <script>
-        // Console Easter egg
-        console.log("%c🎉 You found it!", "font-size: 20px; font-weight: bold;");
-        console.log("Thanks for checking the console!");
-        console.log("");
-        console.log("This page is pure HTML/CSS with minimal JS.");
-        console.log("File size: " + (document. documentElement.outerHTML.length / 1024).toFixed(2) + "kb");
-        console.log("");
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log("The web doesn't need to be complicated.");
-        console.log("Check out the code:  https://github.com/SEOJIAF/Portfolio");
-        console.log("Or my Gitea: https://gitea.oryks.org");
-        
-        // Update file size display
-        window.addEventListener('load', function() {
-            const sizeInKb = (document.documentElement.outerHTML.length / 1024).toFixed(2);
-            const sizeElement = document.getElementById('filesize');
-            if (sizeElement) {
-                sizeElement.textContent = sizeInKb + 'kb';
-            }
-            
-            // Update badge based on size
-            const badge = document.getElementById('size-badge');
-            if (badge) {
-                if (parseFloat(sizeInKb) > 20) {
-                    badge.style.background = '#dc3545';
-                    badge.textContent = '⚠ Over 20kb';
-                } else if (parseFloat(sizeInKb) <= 14) {
-                    badge.textContent = '✓ Under 14kb! ';
-                }
-            }
-        });
-    </script>
+    <!-- CAPABILITIES -->
+    <section id="capabilities" class="section section-caps">
+        <div class="section-header">
+            <span class="section-label">Capabilities</span>
+            <h2 class="section-heading">What I work with</h2>
+        </div>
+
+        <div class="caps-grid">
+            <div class="cap-card" data-cursor="link">
+                <div class="cap-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3>Languages</h3>
+                <ul>
+                    <li>C <span>— memory, filesystems</span></li>
+                    <li>Go <span>— networked services</span></li>
+                    <li>JavaScript / TypeScript</li>
+                    <li>HTML & CSS</li>
+                </ul>
+            </div>
+
+            <div class="cap-card" data-cursor="link">
+                <div class="cap-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                    </svg>
+                </div>
+                <h3>Systems</h3>
+                <ul>
+                    <li>Linux <span>— daily driver</span></li>
+                    <li>Process & service management</li>
+                    <li>Networking fundamentals</li>
+                    <li>Git internals</li>
+                </ul>
+            </div>
+
+            <div class="cap-card" data-cursor="link">
+                <div class="cap-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                    </svg>
+                </div>
+                <h3>Infrastructure</h3>
+                <ul>
+                    <li>Docker & Compose</li>
+                    <li>Reverse proxies</li>
+                    <li>Self-hosted Git <span>— Gitea</span></li>
+                    <li>CI pipelines</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-strip">
+        <div class="marquee-track">
+            <span>Available for projects</span>
+            <span class="marquee-dot">✦</span>
+            <span>Systems & Infrastructure</span>
+            <span class="marquee-dot">✦</span>
+            <span>Self-hosted solutions</span>
+            <span class="marquee-dot">✦</span>
+            <span>Low-level programming</span>
+            <span class="marquee-dot">✦</span>
+            <span>Available for projects</span>
+            <span class="marquee-dot">✦</span>
+            <span>Systems & Infrastructure</span>
+            <span class="marquee-dot">✦</span>
+            <span>Self-hosted solutions</span>
+            <span class="marquee-dot">✦</span>
+            <span>Low-level programming</span>
+            <span class="marquee-dot">✦</span>
+        </div>
+    </div>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section section-contact">
+        <div class="contact-inner">
+            <span class="section-label">Get in touch</span>
+            <h2 class="contact-heading">
+                <span class="contact-line">Let's build</span>
+                <span class="contact-line serif-italic">something</span>
+                <span class="contact-line gradient-fill">together</span>
+            </h2>
+
+            <a href="mailto:hello@seojiaf.dev" class="contact-email" data-cursor="email">
+                hello@seojiaf.dev
+            </a>
+
+            <div class="contact-links">
+                <a href="https://github.com/SEOJIAF" target="_blank" class="contact-link" data-cursor="link">
+                    <span>GitHub</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
+                <a href="https://gitea.oryks.org" target="_blank" class="contact-link" data-cursor="link">
+                    <span>Gitea</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <span>© 2025 SEOJIAF</span>
+            <span>Built from scratch</span>
+        </footer>
+    </section>
+
+</div>
+
+<!-- Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
