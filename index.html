@@ -3,327 +3,949 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEOJIAF</title>
-
+    <title>oryks — we build things</title>
+    <meta name="description" content="oryks — students from skyro.ai hosting projects and learning by building.">
+    <meta name="theme-color" content="#0a0a0a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=General+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --almost-black: #111110;
+            --surface: #1a1a18;
+            --surface-raised: #222220;
+            --border: #2a2a28;
+            --border-light: #3a3a36;
+            --stone: #8a8778;
+            --text: #e8e4d9;
+            --text-dim: #9a9688;
+            --acid: #c8ff2e;
+            --acid-dim: rgba(200, 255, 46, 0.12);
+            --acid-glow: rgba(200, 255, 46, 0.06);
+            --coral: #ff6b4a;
+            --lavender: #b4a0ff;
 
-    <link rel="stylesheet" href="style.css">
+            --font-display: 'Syne', sans-serif;
+            --font-serif: 'Instrument Serif', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-light) transparent;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--text);
+            font-family: var(--font-display);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--acid);
+            color: var(--black);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ═══ NAV ═══ */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(10, 10, 10, 0.7);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--acid);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo .logo-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--acid);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
+
+        .nav-links .nav-terminal {
+            color: var(--acid);
+            background: var(--acid-dim);
+            margin-left: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        .nav-links .nav-terminal:hover {
+            background: rgba(200, 255, 46, 0.2);
+            color: var(--acid);
+        }
+
+        /* ═══ HERO ═══ */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.3;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 70%);
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--acid-glow) 0%, transparent 70%);
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--acid);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            animation: fade-up 0.8s var(--ease-out-expo) 0.2s forwards;
+        }
+
+        .hero-tag::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--acid);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(3.5rem, 9vw, 7.5rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin-bottom: 2rem;
+            color: var(--text);
+            opacity: 0;
+            animation: fade-up 0.8s var(--ease-out-expo) 0.35s forwards;
+        }
+
+        .hero-title .title-we {
+            color: var(--text-dim);
+            -webkit-text-fill-color: var(--text-dim);
+            display: block;
+            font-size: 0.4em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .hero-title .title-build {
+            background: linear-gradient(135deg, var(--text) 0%, var(--stone) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline;
+        }
+
+        .hero-title .title-things {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--acid);
+            -webkit-text-fill-color: var(--acid);
+            display: inline;
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fade-up 0.8s var(--ease-out-expo) 0.5s forwards;
+        }
+
+        .hero-description a {
+            color: var(--acid);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(200, 255, 46, 0.3);
+            transition: border-color 0.2s ease;
+        }
+
+        .hero-description a:hover {
+            border-color: var(--acid);
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fade-up 0.8s var(--ease-out-expo) 0.65s forwards;
+        }
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══ BUTTONS ═══ */
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 2rem;
+            background: var(--acid);
+            color: var(--black);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s var(--ease-out-expo);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(200, 255, 46, 0.25);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 2rem;
+            background: transparent;
+            color: var(--text);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.25s var(--ease-out-expo);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--stone);
+            background: var(--surface);
+            transform: translateY(-2px);
+        }
+
+        /* ═══ TICKER ═══ */
+
+        .ticker {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            overflow: hidden;
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 3rem;
+            width: max-content;
+            animation: ticker-scroll 25s linear infinite;
+        }
+
+        .ticker-item {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .ticker-item .sep {
+            color: var(--acid);
+            font-size: 0.6rem;
+        }
+
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ═══ ABOUT ═══ */
+
+        .about {
+            padding: 8rem 2rem;
+        }
+
+        .about-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .about-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--acid);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .about-label::before {
+            content: '//';
+            color: var(--border-light);
+        }
+
+        .about-heading {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .about-heading em {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--acid);
+        }
+
+        .about-text {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .about-text p + p {
+            margin-top: 1.25rem;
+        }
+
+        .about-text a {
+            color: var(--acid);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(200, 255, 46, 0.3);
+            transition: border-color 0.2s ease;
+        }
+
+        .about-text a:hover {
+            border-color: var(--acid);
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s var(--ease-out-expo);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--acid);
+            line-height: 1;
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* ═══ PROJECTS ═══ */
+
+        .projects {
+            padding: 6rem 2rem 8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .projects-header {
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+        }
+
+        .projects-header h2 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.03em;
+        }
+
+        .projects-header h2 em {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--acid);
+        }
+
+        .projects-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            transition: all 0.35s var(--ease-out-expo);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--acid), transparent);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+            background: var(--surface-raised);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .project-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .project-arrow {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            transition: all 0.3s var(--ease-out-expo);
+            opacity: 0;
+            transform: translate(-4px, 4px);
+        }
+
+        .project-card:hover .project-arrow {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .project-name {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .project-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .project-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--stone);
+            background: var(--almost-black);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+        }
+
+        .card-accent-green .project-icon { background: rgba(200, 255, 46, 0.1); }
+        .card-accent-coral .project-icon { background: rgba(255, 107, 74, 0.1); }
+        .card-accent-lavender .project-icon { background: rgba(180, 160, 255, 0.1); }
+        .card-accent-cyan .project-icon { background: rgba(100, 220, 255, 0.1); }
+        .card-accent-gold .project-icon { background: rgba(255, 200, 60, 0.12); }
+
+        /* ═══ MANIFESTO ═══ */
+
+        .manifesto {
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .manifesto-inner {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .manifesto blockquote {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+            font-style: italic;
+            line-height: 1.4;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .manifesto blockquote::before {
+            content: '"';
+            font-family: var(--font-serif);
+            font-size: 6rem;
+            color: var(--acid);
+            opacity: 0.3;
+            position: absolute;
+            top: -2.5rem;
+            left: -0.5rem;
+            line-height: 1;
+        }
+
+        .manifesto-attribution {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            letter-spacing: 0.08em;
+        }
+
+        /* ═══ FOOTER ═══ */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .footer-left {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--acid);
+        }
+
+        /* ═══ SCROLL REVEAL ═══ */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--ease-out-expo);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        /* ═══ RESPONSIVE ═══ */
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.25rem; }
+            .nav-links a { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+            .hero { padding: 7rem 1.5rem 3rem; }
+            .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .footer-inner { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- Cursor -->
-<div id="cursor" class="cursor">
-    <div class="cursor-dot"></div>
-    <div class="cursor-ring"></div>
-    <div class="cursor-label"></div>
-</div>
-
-<!-- Loader -->
-<div id="loader" class="loader">
-    <div class="loader-inner">
-        <div class="loader-text">
-            <span class="loader-line">SEOJIAF</span>
-        </div>
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Smooth scroll wrapper -->
-<div id="scroll-container">
-
-    <!-- NAV -->
-    <nav id="nav" class="nav">
-        <a href="#" class="nav-brand" data-cursor="link">seojiaf</a>
+    <!-- ═══ NAV ═══ -->
+    <nav>
+        <a href="/" class="nav-logo">
+            <span class="logo-dot"></span>
+            oryks
+        </a>
         <div class="nav-links">
-            <a href="#work" class="nav-link" data-cursor="link">Work</a>
-            <a href="#about" class="nav-link" data-cursor="link">About</a>
-            <a href="#capabilities" class="nav-link" data-cursor="link">Skills</a>
-            <a href="#contact" class="nav-link" data-cursor="link">Contact</a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="https://gitea.oryks.org" target="_blank" rel="noopener">Gitea</a>
+            <a href="/terminal" class="nav-terminal">~/terminal</a>
         </div>
     </nav>
 
-    <!-- HERO -->
+    <!-- ═══ HERO ═══ -->
     <section class="hero">
-        <div class="hero-bg">
-            <div class="hero-gradient"></div>
-            <div class="hero-grid"></div>
-            <div class="hero-orb orb-1"></div>
-            <div class="hero-orb orb-2"></div>
-            <div class="hero-orb orb-3"></div>
-        </div>
-
+        <div class="hero-grid-bg"></div>
+        <div class="hero-glow"></div>
         <div class="hero-content">
-            <div class="hero-eyebrow">
-                <div class="eyebrow-line"></div>
-                <span>Systems & Infrastructure</span>
-            </div>
-
+            <div class="hero-tag">oryks.org</div>
             <h1 class="hero-title">
-                <span class="title-line">
-                    <span class="title-word" data-char-split>Building</span>
-                </span>
-                <span class="title-line">
-                    <span class="title-word serif-italic" data-char-split>& operating</span>
-                </span>
-                <span class="title-line">
-                    <span class="title-word" data-char-split>self-hosted</span>
-                </span>
-                <span class="title-line">
-                    <span class="title-word gradient-fill" data-char-split>systems</span>
-                </span>
+                <span class="title-we">We</span>
+                <span class="title-build">build</span> <span class="title-things">things.</span>
             </h1>
-
-            <p class="hero-sub">
-                Designing, deploying, and maintaining developer<br>
-                infrastructure used by real users.
+            <p class="hero-description">
+                Students from <a href="https://skyro.ai" target="_blank" rel="noopener">skyro.ai</a>
+                who needed somewhere to host projects and learn by actually building stuff.
             </p>
-
-            <div class="hero-scroll-cta" data-cursor="scroll">
-                <div class="scroll-indicator">
-                    <div class="scroll-dot"></div>
-                </div>
-                <span>Scroll to explore</span>
-            </div>
-        </div>
-
-        <div class="hero-footer-row">
-            <span>Based in —</span>
-            <span>Available for projects</span>
-            <span>©2025</span>
-        </div>
-    </section>
-
-    <!-- WORK -->
-    <section id="work" class="section section-work">
-        <div class="section-header">
-            <span class="section-label">Selected Work</span>
-            <h2 class="section-heading">Projects</h2>
-        </div>
-
-        <div class="projects">
-
-            <a href="/projects/oryks.html" class="project" data-cursor="view" data-color="#6366f1">
-                <div class="project-image">
-                    <div class="project-image-inner" style="background: linear-gradient(135deg, #4f46e5, #7c3aed, #a78bfa);"></div>
-                    <div class="project-image-overlay">
-                        <span class="project-number">01</span>
-                    </div>
-                </div>
-                <div class="project-info">
-                    <div class="project-tags">
-                        <span>Ongoing</span>
-                        <span>Linux</span>
-                        <span>Docker</span>
-                        <span>Networking</span>
-                    </div>
-                    <h3 class="project-title">Oryks Infrastructure</h3>
-                    <p class="project-desc">Private self-hosted infrastructure running Git, CI, and internal services on bare-metal Linux servers. Full control, zero third-party dependencies.</p>
-                    <div class="project-cta">
-                        <span>View Project</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-
-            <a href="/projects/goot.html" class="project" data-cursor="view" data-color="#ec4899">
-                <div class="project-image">
-                    <div class="project-image-inner" style="background: linear-gradient(135deg, #db2777, #ec4899, #f9a8d4);"></div>
-                    <div class="project-image-overlay">
-                        <span class="project-number">02</span>
-                    </div>
-                </div>
-                <div class="project-info">
-                    <div class="project-tags">
-                        <span>2025</span>
-                        <span>C</span>
-                        <span>Filesystems</span>
-                    </div>
-                    <h3 class="project-title">Goot</h3>
-                    <p class="project-desc">Low-level Git reimplementation in C. Understanding object storage, repository layout, and filesystem behavior from the ground up.</p>
-                    <div class="project-cta">
-                        <span>View Project</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-
-            <a href="/projects/quicktransfer.html" class="project" data-cursor="view" data-color="#f59e0b">
-                <div class="project-image">
-                    <div class="project-image-inner" style="background: linear-gradient(135deg, #d97706, #f59e0b, #fcd34d);"></div>
-                    <div class="project-image-overlay">
-                        <span class="project-number">03</span>
-                    </div>
-                </div>
-                <div class="project-info">
-                    <div class="project-tags">
-                        <span>2024</span>
-                        <span>WebSockets</span>
-                        <span>JavaScript</span>
-                    </div>
-                    <h3 class="project-title">QuickTransfer</h3>
-                    <p class="project-desc">Real-time peer-to-peer text transfer optimized for low latency and zero persistence. Simple problem, elegant solution.</p>
-                    <div class="project-cta">
-                        <span>View Project</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="section section-about">
-        <div class="about-layout">
-            <div class="about-left">
-                <span class="section-label">About</span>
-                <h2 class="about-heading">
-                    I'm a student at <em>Skyro</em>, obsessed with how things work at the lowest level.
-                </h2>
-            </div>
-            <div class="about-right">
-                <div class="about-block">
-                    <h3>Craft</h3>
-                    <p>Full-stack web development with a focus on performance and simplicity. I write C, build servers, manage infrastructure, and create web experiences that load instantly.</p>
-                </div>
-                <div class="about-block">
-                    <h3>Philosophy</h3>
-                    <p>Constraints breed creativity. The best code is the code you don't ship. I care about understanding systems deeply — not just using them, but knowing why they work.</p>
-                </div>
+            <div class="hero-actions">
+                <a href="#projects" class="btn-primary">
+                    See our projects
+                    <span>↓</span>
+                </a>
+                <a href="/terminal" class="btn-secondary">
+                    <span style="font-family: var(--font-mono); font-size: 0.85em;">$</span>
+                    Terminal Mode
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- CAPABILITIES -->
-    <section id="capabilities" class="section section-caps">
-        <div class="section-header">
-            <span class="section-label">Capabilities</span>
-            <h2 class="section-heading">What I work with</h2>
-        </div>
-
-        <div class="caps-grid">
-            <div class="cap-card" data-cursor="link">
-                <div class="cap-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <h3>Languages</h3>
-                <ul>
-                    <li>C <span>— memory, filesystems</span></li>
-                    <li>Go <span>— networked services</span></li>
-                    <li>JavaScript / TypeScript</li>
-                    <li>HTML & CSS</li>
-                </ul>
-            </div>
-
-            <div class="cap-card" data-cursor="link">
-                <div class="cap-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                    </svg>
-                </div>
-                <h3>Systems</h3>
-                <ul>
-                    <li>Linux <span>— daily driver</span></li>
-                    <li>Process & service management</li>
-                    <li>Networking fundamentals</li>
-                    <li>Git internals</li>
-                </ul>
-            </div>
-
-            <div class="cap-card" data-cursor="link">
-                <div class="cap-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                    </svg>
-                </div>
-                <h3>Infrastructure</h3>
-                <ul>
-                    <li>Docker & Compose</li>
-                    <li>Reverse proxies</li>
-                    <li>Self-hosted Git <span>— Gitea</span></li>
-                    <li>CI pipelines</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- MARQUEE -->
-    <div class="marquee-strip">
-        <div class="marquee-track">
-            <span>Available for projects</span>
-            <span class="marquee-dot">✦</span>
-            <span>Systems & Infrastructure</span>
-            <span class="marquee-dot">✦</span>
-            <span>Self-hosted solutions</span>
-            <span class="marquee-dot">✦</span>
-            <span>Low-level programming</span>
-            <span class="marquee-dot">✦</span>
-            <span>Available for projects</span>
-            <span class="marquee-dot">✦</span>
-            <span>Systems & Infrastructure</span>
-            <span class="marquee-dot">✦</span>
-            <span>Self-hosted solutions</span>
-            <span class="marquee-dot">✦</span>
-            <span>Low-level programming</span>
-            <span class="marquee-dot">✦</span>
+    <!-- ═══ TICKER ═══ -->
+    <div class="ticker">
+        <div class="ticker-track">
+            <span class="ticker-item">Students <span class="sep">◆</span></span>
+            <span class="ticker-item">Self-Hosted <span class="sep">◆</span></span>
+            <span class="ticker-item">sybau <span class="sep">◆</span></span>
+            <span class="ticker-item">Broke but Shipping <span class="sep">◆</span></span>
+            <span class="ticker-item">skyro.ai <span class="sep">◆</span></span>
+            <span class="ticker-item">Open Source <span class="sep">◆</span></span>
+            <span class="ticker-item">oryks.org <span class="sep">◆</span></span>
+            <span class="ticker-item">git push and pray <span class="sep">◆</span></span>
+            <span class="ticker-item">Students <span class="sep">◆</span></span>
+            <span class="ticker-item">Self-Hosted <span class="sep">◆</span></span>
+            <span class="ticker-item">braindead <span class="sep">◆</span></span>
+            <span class="ticker-item">Broke <span class="sep">◆</span></span>
+            <span class="ticker-item">skyro.ai <span class="sep">◆</span></span>
+            <span class="ticker-item">Open Source <span class="sep">◆</span></span>
+            <span class="ticker-item">oryks.org <span class="sep">◆</span></span>
+            <span class="ticker-item">git push and pray <span class="sep">◆</span></span>
         </div>
     </div>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section section-contact">
-        <div class="contact-inner">
-            <span class="section-label">Get in touch</span>
-            <h2 class="contact-heading">
-                <span class="contact-line">Let's build</span>
-                <span class="contact-line serif-italic">something</span>
-                <span class="contact-line gradient-fill">together</span>
-            </h2>
-
-            <a href="mailto:hello@seojiaf.dev" class="contact-email" data-cursor="email">
-                hello@seojiaf.dev
-            </a>
-
-            <div class="contact-links">
-                <a href="https://github.com/SEOJIAF" target="_blank" class="contact-link" data-cursor="link">
-                    <span>GitHub</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                    </svg>
-                </a>
-                <a href="https://gitea.oryks.org" target="_blank" class="contact-link" data-cursor="link">
-                    <span>Gitea</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                    </svg>
-                </a>
+    <!-- ═══ ABOUT ═══ -->
+    <section class="about" id="about">
+        <div class="about-inner">
+            <div class="reveal">
+                <div class="about-label">About</div>
+                <h2 class="about-heading">
+                    uuum<br>
+                    stuff...<br>
+                    <em>yeah.</em>
+                </h2>
+            </div>
+            <div>
+                <div class="about-text reveal reveal-delay-1">
+                    <p>
+                        We're students from <a href="https://skyro.ai" target="_blank" rel="noopener">skyro.ai</a>.
+                        We just needed a goddamn domain and I HAVE TO PAY FOR IT.
+                    </p>
+                    <p>
+                        idk bro we just host stuff here and try to learn things
+                        without going completely broke in the process.
+                    </p>
+                </div>
+                <div class="about-stats reveal reveal-delay-2">
+                    <div class="stat-card">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Projects hosted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$0</div>
+                        <div class="stat-label">Budget</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Self-hosted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">pls</div>
+                        <div class="stat-label">just scroll already</div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <footer class="footer">
-            <span>© 2025 SEOJIAF</span>
-            <span>Built from scratch</span>
-        </footer>
     </section>
 
-</div>
+    <!-- ═══ PROJECTS ═══ -->
+    <section class="projects" id="projects">
+        <div class="projects-header">
+            <h2 class="reveal">Our <em>stuff</em></h2>
+        </div>
+        <div class="projects-grid">
 
-<!-- Dependencies -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-<script src="script.js"></script>
+            <a href="https://wrapped.oryks.org" target="_blank" rel="noopener" class="project-card card-accent-green reveal reveal-delay-1">
+                <div class="project-card-top">
+                    <div class="project-icon">📊</div>
+                    <span class="project-arrow">↗</span>
+                </div>
+                <div class="project-name">Skyro Wrapped</div>
+                <div class="project-desc">there is a reason we call it the "skyro files"</div>
+                <div class="project-tags">
+                    <span class="project-tag">private</span>
+                    <span class="project-tag">data</span>
+                </div>
+            </a>
+
+            <a href="https://gitea.oryks.org" target="_blank" rel="noopener" class="project-card card-accent-coral reveal reveal-delay-2">
+                <div class="project-card-top">
+                    <div class="project-icon">🦊</div>
+                    <span class="project-arrow">↗</span>
+                </div>
+                <div class="project-name">Gitea</div>
+                <div class="project-desc">Self-hosted git. Where all our code actually lives.</div>
+                <div class="project-tags">
+                    <span class="project-tag">self-hosted</span>
+                    <span class="project-tag">git -no shit</span>
+                </div>
+            </a>
+
+            <a href="https://femboys.oryks.org" target="_blank" rel="noopener" class="project-card card-accent-lavender reveal reveal-delay-3">
+                <div class="project-card-top">
+                    <div class="project-icon">✨</div>
+                    <span class="project-arrow">↗</span>
+                </div>
+                <div class="project-name">Femboys</div>
+                <div class="project-desc">Don't ask. Just click.</div>
+                <div class="project-tags">
+                    <span class="project-tag">🤤</span>
+                </div>
+            </a>
+
+            <a href="https://seojiaf.oryks.org" target="_blank" rel="noopener" class="project-card card-accent-cyan reveal reveal-delay-4">
+                <div class="project-card-top">
+                    <div class="project-icon">🧠</div>
+                    <span class="project-arrow">↗</span>
+                </div>
+                <div class="project-name">SEOJIAF</div>
+                <div class="project-desc">portfolio so i dont stay jobless</div>
+                <div class="project-tags">
+                    <span class="project-tag">personal</span>
+                </div>
+            </a>
+
+            <a href="https://dnd.oryks.org" target="_blank" rel="noopener" class="project-card card-accent-gold reveal reveal-delay-5">
+                <div class="project-card-top">
+                    <div class="project-icon">⚔️</div>
+                    <span class="project-arrow">↗</span>
+                </div>
+                <div class="project-name">D&D Tools</div>
+                <div class="project-desc">man sybau</div>
+                <div class="project-tags">
+                    <span class="project-tag">tabletop</span>
+                    <span class="project-tag">tools</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- ═══ MANIFESTO ═══ -->
+    <section class="manifesto reveal">
+        <div class="manifesto-inner">
+            <blockquote>
+                we need to lock in and get a job, or we gonna die
+            </blockquote>
+            <p class="manifesto-attribution">— us</p>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-left">oryks · students from <a href="https://skyro.ai" target="_blank" rel="noopener" style="color: var(--acid); text-decoration: none;">skyro.ai</a></div>
+            <div class="footer-links">
+                <a href="https://gitea.oryks.org" target="_blank" rel="noopener">gitea</a>
+                <a href="/terminal">terminal</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
 </body>
 </html>
