@@ -1,329 +1,764 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEOJIAF</title>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SEOJIAF</title>
+        <style>
+            body {
+                font-family: monospace;
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 0 10px;
+                background: #fff;
+                color: #000;
+                font-size: 17px;
+                line-height: 1.7;
+            }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=General+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+            a { color: #00e; }
+            a:visited { color: #551a8b; }
+            hr { border: none; border-top: 1px solid #000; margin: 24px 0; }
 
-    <link rel="stylesheet" href="style.css">
-</head>
+            h1 { font-size: 22px; font-weight: bold; margin: 0 0 4px 0; cursor: default; }
+            h2 { font-size: 18px; font-weight: bold; margin: 24px 0 8px 0; }
+            h3 { font-size: 17px; font-weight: normal; margin: 0; }
 
-<body>
+            ul { margin: 6px 0; padding-left: 22px; }
+            li { margin: 3px 0; }
+            p  { margin: 8px 0; }
 
-<!-- Cursor -->
-<div id="cursor" class="cursor">
-    <div class="cursor-dot"></div>
-    <div class="cursor-ring"></div>
-    <div class="cursor-label"></div>
-</div>
+            pre {
+                background: #f4f4f4;
+                padding: 10px;
+                overflow-x: auto;
+                font-size: 15px;
+                line-height: 1.6;
+            }
 
-<!-- Loader -->
-<div id="loader" class="loader">
-    <div class="loader-inner">
-        <div class="loader-text">
-            <span class="loader-line">SEOJIAF</span>
+            table { border-collapse: collapse; }
+            td, th {
+                border: 1px solid #999;
+                padding: 5px 10px;
+                text-align: left;
+                font-size: 15px;
+            }
+            th { background: #eee; }
+
+            small { font-size: 14px; }
+
+            .hidden {
+                color: #fff;
+                background: #fff;
+                cursor: default;
+                user-select: text;
+            }
+            .hidden:hover { color: #000; }
+
+            @keyframes blink { 50% { opacity: 0; } }
+            .blink { animation: blink 1s step-end infinite; }
+
+            body.hacker { background: #000; color: #0f0; }
+            body.hacker a { color: #0f0; }
+            body.hacker a:visited { color: #0a0; }
+            body.hacker hr { border-top-color: #0f0; }
+            body.hacker td, body.hacker th { border-color: #0f0; }
+            body.hacker th { background: #111; }
+            body.hacker pre { background: #111; color: #0f0; }
+            body.hacker .hidden { background: #000; color: #000; }
+            body.hacker .hidden:hover { color: #0f0; }
+
+            @keyframes rave {
+                0%   { background: #ff0000; color: #fff; }
+                16%  { background: #ff8800; color: #000; }
+                33%  { background: #ffff00; color: #000; }
+                50%  { background: #00cc00; color: #fff; }
+                66%  { background: #0000ff; color: #fff; }
+                83%  { background: #8800ff; color: #fff; }
+                100% { background: #ff0000; color: #fff; }
+            }
+            body.rave { animation: rave 0.6s linear infinite; }
+            body.rave a { color: #fff; }
+
+            body.sad { filter: grayscale(1) blur(0.6px); }
+            body.flipped { transform: rotate(180deg); }
+
+            #secret {
+                display: none;
+                border: 1px dashed #999;
+                padding: 10px;
+                margin-top: 12px;
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+            #glitch-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 999;
+                overflow: hidden;
+            }
+
+            #toast {
+                display: none;
+                position: fixed;
+                bottom: 14px;
+                right: 14px;
+                background: #f4f4f4;
+                border: 1px solid #999;
+                padding: 8px 12px;
+                font-family: monospace;
+                font-size: 13px;
+                z-index: 9999;
+                max-width: 260px;
+                line-height: 1.5;
+            }
+
+            #matrix-canvas {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 9990;
+                background: #000;
+            }
+            #matrix-canvas.active { display: block; }
+
+            #close-matrix {
+                display: none;
+                position: fixed;
+                bottom: 14px;
+                left: 14px;
+                z-index: 9999;
+                font-family: monospace;
+                font-size: 13px;
+                background: #000;
+                color: #0f0;
+                border: 1px solid #0f0;
+                padding: 4px 10px;
+                cursor: pointer;
+            }
+            #close-matrix.active { display: block; }
+
+            /* ── TERMINAL ─────────────────────────────────────── */
+            #terminal {
+                display: none;
+                position: fixed;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: min(580px, 96vw);
+                background: #0d0d0d;
+                border: 1px solid #444;
+                z-index: 99999;
+                font-family: monospace;
+                font-size: 14px;
+                box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+                display: none;
+                flex-direction: column;
+            }
+
+            #terminal.open { display: flex; }
+
+            #term-titlebar {
+                background: #222;
+                color: #aaa;
+                padding: 5px 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: move;
+                user-select: none;
+                font-size: 12px;
+                border-bottom: 1px solid #444;
+            }
+
+            #term-titlebar span { color: #666; }
+
+            #term-close {
+                cursor: pointer;
+                color: #888;
+                font-size: 15px;
+                line-height: 1;
+                padding: 0 4px;
+            }
+            #term-close:hover { color: #ff5f56; }
+
+            #term-output {
+                padding: 10px 12px;
+                color: #ccc;
+                min-height: 260px;
+                max-height: 360px;
+                overflow-y: auto;
+                line-height: 1.6;
+                flex: 1;
+            }
+
+            #term-output .line { margin: 1px 0; white-space: pre-wrap; word-break: break-all; }
+            #term-output .line.prompt { color: #0f0; }
+            #term-output .line.err    { color: #f55; }
+            #term-output .line.info   { color: #5af; }
+            #term-output .line.warn   { color: #fa0; }
+            #term-output .line.dim    { color: #666; }
+
+            #term-input-row {
+                display: flex;
+                align-items: center;
+                border-top: 1px solid #333;
+                padding: 6px 12px;
+                background: #0d0d0d;
+            }
+
+            #term-ps1 {
+                color: #0f0;
+                margin-right: 8px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            #term-input {
+                background: transparent;
+                border: none;
+                outline: none;
+                color: #eee;
+                font-family: monospace;
+                font-size: 14px;
+                flex: 1;
+                caret-color: #0f0;
+            }
+        </style>
+    </head>
+    <body>
+
+    <div id="glitch-overlay"></div>
+    <canvas id="matrix-canvas"></canvas>
+    <button id="close-matrix" onclick="closeMatrix()">[ exit matrix ]</button>
+    <div id="toast"></div>
+
+    <!-- ── TERMINAL WIDGET ── -->
+    <div id="terminal">
+        <div id="term-titlebar">
+            <span>seojiaf@oryks:~</span>
+            <span id="term-close" onclick="closeTerm()">✕</span>
         </div>
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Smooth scroll wrapper -->
-<div id="scroll-container">
-
-    <!-- NAV -->
-    <nav id="nav" class="nav">
-        <a href="#" class="nav-brand" data-cursor="link">seojiaf</a>
-        <div class="nav-links">
-            <a href="#work" class="nav-link" data-cursor="link">Work</a>
-            <a href="#about" class="nav-link" data-cursor="link">About</a>
-            <a href="#capabilities" class="nav-link" data-cursor="link">Skills</a>
-            <a href="#contact" class="nav-link" data-cursor="link">Contact</a>
-        </div>
-    </nav>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-bg">
-            <div class="hero-gradient"></div>
-            <div class="hero-grid"></div>
-            <div class="hero-orb orb-1"></div>
-            <div class="hero-orb orb-2"></div>
-            <div class="hero-orb orb-3"></div>
-        </div>
-
-        <div class="hero-content">
-            <div class="hero-eyebrow">
-                <div class="eyebrow-line"></div>
-                <span>Systems & Infrastructure</span>
-            </div>
-
-            <h1 class="hero-title">
-                <span class="title-line">
-                    <span class="title-word" data-char-split>Building</span>
-                </span>
-                <span class="title-line">
-                    <span class="title-word serif-italic" data-char-split>& operating</span>
-                </span>
-                <span class="title-line">
-                    <span class="title-word" data-char-split>self-hosted</span>
-                </span>
-                <span class="title-line">
-                    <span class="title-word gradient-fill" data-char-split>systems</span>
-                </span>
-            </h1>
-
-            <p class="hero-sub">
-                Designing, deploying, and maintaining developer<br>
-                infrastructure used by real users.
-            </p>
-
-            <div class="hero-scroll-cta" data-cursor="scroll">
-                <div class="scroll-indicator">
-                    <div class="scroll-dot"></div>
-                </div>
-                <span>Scroll to explore</span>
-            </div>
-        </div>
-
-        <div class="hero-footer-row">
-            <span>Based in —</span>
-            <span>Available for projects</span>
-            <span>©2025</span>
-        </div>
-    </section>
-
-    <!-- WORK -->
-    <section id="work" class="section section-work">
-        <div class="section-header">
-            <span class="section-label">Selected Work</span>
-            <h2 class="section-heading">Projects</h2>
-        </div>
-
-        <div class="projects">
-
-            <a href="/projects/oryks.html" class="project" data-cursor="view" data-color="#6366f1">
-                <div class="project-image">
-                    <div class="project-image-inner" style="background: linear-gradient(135deg, #4f46e5, #7c3aed, #a78bfa);"></div>
-                    <div class="project-image-overlay">
-                        <span class="project-number">01</span>
-                    </div>
-                </div>
-                <div class="project-info">
-                    <div class="project-tags">
-                        <span>Ongoing</span>
-                        <span>Linux</span>
-                        <span>Docker</span>
-                        <span>Networking</span>
-                    </div>
-                    <h3 class="project-title">Oryks Infrastructure</h3>
-                    <p class="project-desc">Private self-hosted infrastructure running Git, CI, and internal services on bare-metal Linux servers. Full control, zero third-party dependencies.</p>
-                    <div class="project-cta">
-                        <span>View Project</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-
-            <a href="/projects/goot.html" class="project" data-cursor="view" data-color="#ec4899">
-                <div class="project-image">
-                    <div class="project-image-inner" style="background: linear-gradient(135deg, #db2777, #ec4899, #f9a8d4);"></div>
-                    <div class="project-image-overlay">
-                        <span class="project-number">02</span>
-                    </div>
-                </div>
-                <div class="project-info">
-                    <div class="project-tags">
-                        <span>2025</span>
-                        <span>C</span>
-                        <span>Filesystems</span>
-                    </div>
-                    <h3 class="project-title">Goot</h3>
-                    <p class="project-desc">Low-level Git reimplementation in C. Understanding object storage, repository layout, and filesystem behavior from the ground up.</p>
-                    <div class="project-cta">
-                        <span>View Project</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-
-            <a href="/projects/quicktransfer.html" class="project" data-cursor="view" data-color="#f59e0b">
-                <div class="project-image">
-                    <div class="project-image-inner" style="background: linear-gradient(135deg, #d97706, #f59e0b, #fcd34d);"></div>
-                    <div class="project-image-overlay">
-                        <span class="project-number">03</span>
-                    </div>
-                </div>
-                <div class="project-info">
-                    <div class="project-tags">
-                        <span>2024</span>
-                        <span>WebSockets</span>
-                        <span>JavaScript</span>
-                    </div>
-                    <h3 class="project-title">QuickTransfer</h3>
-                    <p class="project-desc">Real-time peer-to-peer text transfer optimized for low latency and zero persistence. Simple problem, elegant solution.</p>
-                    <div class="project-cta">
-                        <span>View Project</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="section section-about">
-        <div class="about-layout">
-            <div class="about-left">
-                <span class="section-label">About</span>
-                <h2 class="about-heading">
-                    I'm a student at <em>Skyro</em>, obsessed with how things work at the lowest level.
-                </h2>
-            </div>
-            <div class="about-right">
-                <div class="about-block">
-                    <h3>Craft</h3>
-                    <p>Full-stack web development with a focus on performance and simplicity. I write C, build servers, manage infrastructure, and create web experiences that load instantly.</p>
-                </div>
-                <div class="about-block">
-                    <h3>Philosophy</h3>
-                    <p>Constraints breed creativity. The best code is the code you don't ship. I care about understanding systems deeply — not just using them, but knowing why they work.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CAPABILITIES -->
-    <section id="capabilities" class="section section-caps">
-        <div class="section-header">
-            <span class="section-label">Capabilities</span>
-            <h2 class="section-heading">What I work with</h2>
-        </div>
-
-        <div class="caps-grid">
-            <div class="cap-card" data-cursor="link">
-                <div class="cap-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <h3>Languages</h3>
-                <ul>
-                    <li>C <span>— memory, filesystems</span></li>
-                    <li>Go <span>— networked services</span></li>
-                    <li>JavaScript / TypeScript</li>
-                    <li>HTML & CSS</li>
-                </ul>
-            </div>
-
-            <div class="cap-card" data-cursor="link">
-                <div class="cap-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                    </svg>
-                </div>
-                <h3>Systems</h3>
-                <ul>
-                    <li>Linux <span>— daily driver</span></li>
-                    <li>Process & service management</li>
-                    <li>Networking fundamentals</li>
-                    <li>Git internals</li>
-                </ul>
-            </div>
-
-            <div class="cap-card" data-cursor="link">
-                <div class="cap-icon">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                    </svg>
-                </div>
-                <h3>Infrastructure</h3>
-                <ul>
-                    <li>Docker & Compose</li>
-                    <li>Reverse proxies</li>
-                    <li>Self-hosted Git <span>— Gitea</span></li>
-                    <li>CI pipelines</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- MARQUEE -->
-    <div class="marquee-strip">
-        <div class="marquee-track">
-            <span>Available for projects</span>
-            <span class="marquee-dot">✦</span>
-            <span>Systems & Infrastructure</span>
-            <span class="marquee-dot">✦</span>
-            <span>Self-hosted solutions</span>
-            <span class="marquee-dot">✦</span>
-            <span>Low-level programming</span>
-            <span class="marquee-dot">✦</span>
-            <span>Available for projects</span>
-            <span class="marquee-dot">✦</span>
-            <span>Systems & Infrastructure</span>
-            <span class="marquee-dot">✦</span>
-            <span>Self-hosted solutions</span>
-            <span class="marquee-dot">✦</span>
-            <span>Low-level programming</span>
-            <span class="marquee-dot">✦</span>
+        <div id="term-output"></div>
+        <div id="term-input-row">
+            <span id="term-ps1">seojiaf@oryks:~$</span>
+            <input id="term-input" type="text" autocomplete="off" autocorrect="off"
+                autocapitalize="off" spellcheck="false" placeholder="type a command...">
         </div>
     </div>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section section-contact">
-        <div class="contact-inner">
-            <span class="section-label">Get in touch</span>
-            <h2 class="contact-heading">
-                <span class="contact-line">Let's build</span>
-                <span class="contact-line serif-italic">something</span>
-                <span class="contact-line gradient-fill">together</span>
-            </h2>
+    <h1>SEOJIAF</h1>
+    <p>backend developer. systems. infrastructure.</p>
+    <p>
+        [<a href="https://github.com/SEOJIAF">github</a>]
+        [<a href="https://gitea.oryks.org">gitea</a>]
+        [<a href="mailto:&#110;&#111;&#116;&#109;&#121;&#101;&#109;&#97;&#105;&#108;&#64;&#110;&#111;&#116;&#109;&#121;&#100;&#111;&#109;&#97;&#105;&#110;&#46;&#99;&#111;&#109;">email?</a>]
+        &nbsp;<span class="hidden blink">[you found me]</span>
+    </p>
 
-            <a href="mailto:hello@seojiaf.dev" class="contact-email" data-cursor="email">
-                hello@seojiaf.dev
-            </a>
+    <hr>
 
-            <div class="contact-links">
-                <a href="https://github.com/SEOJIAF" target="_blank" class="contact-link" data-cursor="link">
-                    <span>GitHub</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                    </svg>
-                </a>
-                <a href="https://gitea.oryks.org" target="_blank" class="contact-link" data-cursor="link">
-                    <span>Gitea</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17L17 7M17 7H7M17 7V17"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
+    <h2>about</h2>
+    <p>i work with C, JavaScript, and server infrastructure.</p>
+    <p>i prefer self-hosted solutions, minimal dependencies, and understanding how things actually work.</p>
+    <!-- hint: try typing "sudo", "term", or "help" -->
 
-        <footer class="footer">
-            <span>© 2025 SEOJIAF</span>
-            <span>Built from scratch</span>
-        </footer>
-    </section>
+    <hr>
 
-</div>
+    <h2>skills</h2>
+    <table>
+        <tr><th>category</th><th>tools</th></tr>
+        <tr><td>languages</td><td>C, JavaScript, HTML/CSS</td></tr>
+        <tr><td>infrastructure</td><td>Linux, server admin, Git/Gitea</td></tr>
+        <tr><td>focus</td><td>system design, performance, web architecture</td></tr>
 
-<!-- Dependencies -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-<script src="script.js"></script>
-</body>
-</html>
+    </table>
+
+    <hr>
+
+    <h2>projects</h2>
+
+    <h3><b>Goot</b> — git implementation in C</h3>
+    <p>built version control from scratch. init, commit, branch, merge. learned more from this than anything else.</p>
+    <pre>$ ./goot init
+    initialized empty goot repository in .goot/</pre>
+
+    <h3><b>Oryks.org</b> — self-hosted infrastructure</h3>
+    <p>personal server. gitea. full linux admin. no cloud, no vendor lock-in.</p>
+    <p>→ <a href="https://gitea.oryks.org">gitea.oryks.org</a></p>
+
+    <h3><b>QuickTransfer</b> — text transfer utility</h3>
+    <p>send text between devices. minimal stack. does one thing.</p>
+    <p>→ <a href="https://dev-quicktransfer.vercel.app/">demo</a></p>
+
+    <!--
+        if you're reading source:
+        rot13: frdbwnf@belhf.bet
+        the answer is 42
+    -->
+    <hr>
+
+    <p>
+        <small>
+            last updated: sometime.<br>
+            built with: HTML + CSS. no frameworks. no regrets.<br>
+            <span class="hidden">you're still here?</span>
+            <!-- konami: ↑↑↓↓←→←→BA -->
+            <!-- keywords: term / goot / sudo / rave / flip / sad / matrix / help / hire / 42 -->
+        </small>
+    </p>
+
+    <script>
+    // ── TOAST ─────────────────────────────────────────────────
+    function toast(msg, duration = 3000) {
+        const t = document.getElementById('toast');
+        t.innerHTML = msg;
+        t.style.display = 'block';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.style.display = 'none', duration);
+    }
+
+    // ── TERMINAL ──────────────────────────────────────────────
+    const termEl    = document.getElementById('terminal');
+    const termOut   = document.getElementById('term-output');
+    const termInput = document.getElementById('term-input');
+    let termHistory = [];
+    let termHistIdx = -1;
+
+    const FS = {
+        '~': ['about.txt', 'projects/', 'skills.txt', '.bash_history', '.secret'],
+        '~/projects': ['goot/', 'oryks/', 'quicktransfer/'],
+        '~/projects/goot': ['main.c', 'README.md', 'Makefile'],
+        '~/projects/oryks': ['docker-compose.yml', 'nginx.conf', '.env'],
+        '~/projects/quicktransfer': ['index.js', 'package.json', 'README.md'],
+    };
+
+    const FILE_CONTENTS = {
+        'about.txt':     'backend developer.\nworks with C, Go, Linux.\n',
+        'skills.txt':    'C\nJavaScript\nHTML/CSS\nLinux\nGit/Gitea\nsystem design\nperformance',
+        '.bash_history': 'sudo rm -rf node_modules\ngit push origin main --force\nnvim README.md\n./goot init\nssh root@oryks.org\ncat .secret',
+        'README.md':     '# goot\ngit, but written in C by one person at 2am.\nuse at your own risk.',
+        'main.c':        '// goot - git implementation in C\n// TODO: finish merge\nint main() {\n    // it\'s fine\n    return 0;\n}',
+        'Makefile':      'build:\n\tgcc -o goot main.c\nclean:\n\trm -f goot',
+        'nginx.conf':    'server {\n    listen 80;\n    server_name oryks.org;\n    # it works, don\'t touch it\n}',
+        '.env':          'DB_PASS=hunter2\n# just kidding',
+        'index.js':      '// QuickTransfer\n// minimal. does one thing.\nconst ws = new WebSocket(url);\n// ...',
+        'package.json':  '{\n  "name": "quicktransfer",\n  "dependencies": {}\n  // zero deps. proud of this.\n}',
+        'docker-compose.yml': 'version: "3"\nservices:\n  gitea:\n    image: gitea/gitea\n    # self-hosted. always.',
+    };
+
+    let cwd = '~';
+    let termOpen = false;
+
+    function termPrint(text, cls = '') {
+        const line = document.createElement('div');
+        line.className = 'line' + (cls ? ' ' + cls : '');
+        line.textContent = text;
+        termOut.appendChild(line);
+        termOut.scrollTop = termOut.scrollHeight;
+    }
+
+    function termPrintHTML(html, cls = '') {
+        const line = document.createElement('div');
+        line.className = 'line' + (cls ? ' ' + cls : '');
+        line.innerHTML = html;
+        termOut.appendChild(line);
+        termOut.scrollTop = termOut.scrollHeight;
+    }
+
+    function termClear() { termOut.innerHTML = ''; }
+
+    function openTerm() {
+        termEl.classList.add('open');
+        termOpen = true;
+        if (termOut.children.length === 0) {
+            termPrint('seojiaf terminal v1.0.0', 'info');
+            termPrint('type "help" for available commands.', 'dim');
+            termPrint('');
+        }
+        setTimeout(() => termInput.focus(), 50);
+        toast('terminal opened. type "help".');
+    }
+
+    function closeTerm() {
+        termEl.classList.remove('open');
+        termOpen = false;
+    }
+
+    function handleCommand(raw) {
+        const input = raw.trim();
+        if (!input) return;
+
+        termHistory.unshift(input);
+        termHistIdx = -1;
+
+        termPrint('seojiaf@oryks:' + cwd + '$ ' + input, 'prompt');
+
+        const [cmd, ...args] = input.split(/\s+/);
+        const arg = args.join(' ');
+
+        switch (cmd) {
+            case 'help':
+                termPrint('available commands:', 'info');
+                termPrint('  ls              list files');
+                termPrint('  cd <dir>        change directory');
+                termPrint('  cat <file>      read file');
+                termPrint('  pwd             current directory');
+                termPrint('  whoami          who are you');
+                termPrint('  uname           system info');
+                termPrint('  date            current date');
+                termPrint('  echo <text>     echo text');
+                termPrint('  clear           clear terminal');
+                termPrint('  history         command history');
+                termPrint('  curl <url>      fake curl');
+                termPrint('  ping <host>     fake ping');
+                termPrint('  ps              running processes');
+                termPrint('  uptime          system uptime');
+                termPrint('  sudo <cmd>      try it');
+                termPrint('  goot            version control');
+                termPrint('  exit            close terminal');
+                break;
+
+            case 'ls': {
+                const key = cwd;
+                const files = FS[key] || [];
+                if (files.length === 0) {
+                    termPrint('(empty)');
+                } else {
+                    termPrint(files.join('   '));
+                }
+                break;
+            }
+
+            case 'pwd':
+                termPrint(cwd === '~' ? '/home/seojiaf' : '/home/seojiaf/' + cwd.replace('~/', ''));
+                break;
+
+            case 'cd': {
+                if (!arg || arg === '~' || arg === '/home/seojiaf') {
+                    cwd = '~';
+                    document.getElementById('term-ps1').textContent = 'seojiaf@oryks:~$';
+                    break;
+                }
+                if (arg === '..') {
+                    if (cwd === '~') { termPrint('already at home'); break; }
+                    const parts = cwd.split('/');
+                    parts.pop();
+                    cwd = parts.join('/') || '~';
+                    document.getElementById('term-ps1').textContent = 'seojiaf@oryks:' + cwd + '$';
+                    break;
+                }
+                const target = cwd === '~' ? '~/' + arg : cwd + '/' + arg;
+                const clean = target.replace('//', '/');
+                if (FS[clean] !== undefined) {
+                    cwd = clean;
+                    document.getElementById('term-ps1').textContent = 'seojiaf@oryks:' + cwd + '$';
+                } else {
+                    termPrint('cd: ' + arg + ': No such file or directory', 'err');
+                }
+                break;
+            }
+
+            case 'cat': {
+                if (!arg) { termPrint('cat: missing file operand', 'err'); break; }
+                const content = FILE_CONTENTS[arg];
+                if (content) {
+                    content.split('\n').forEach(l => termPrint(l));
+                } else {
+                    termPrint('cat: ' + arg + ': No such file or directory', 'err');
+                }
+                break;
+            }
+
+            case 'whoami':
+                termPrint('seojiaf');
+                break;
+
+            case 'uname':
+                termPrint('Linux oryks 6.1.0-self-hosted #1 SMP x86_64 GNU/Linux');
+                break;
+
+            case 'date':
+                termPrint(new Date().toString());
+                break;
+
+            case 'echo':
+                termPrint(arg || '');
+                break;
+
+            case 'clear':
+                termClear();
+                break;
+
+            case 'history':
+                if (termHistory.length <= 1) { termPrint('(no history yet)', 'dim'); break; }
+                termHistory.slice(1).forEach((h, i) => termPrint('  ' + (i + 1) + '  ' + h));
+                break;
+
+            case 'sudo':
+                if (!arg) { termPrint('sudo: no command given', 'err'); break; }
+                if (arg === 'rm -rf /') {
+                    termPrint('nice try.', 'warn');
+                    break;
+                }
+                termPrint('sudo: ' + arg + ': command not found... just kidding', 'warn');
+                termPrint('seojiaf is not in the sudoers file.', 'err');
+                termPrint('this incident has been reported.', 'err');
+                break;
+
+            case 'curl':
+                if (!arg) { termPrint('curl: try curl oryks.org', 'err'); break; }
+                if (arg.includes('oryks')) {
+                    termPrint('HTTP/1.1 200 OK', 'info');
+                    termPrint('Server: nginx/self-hosted');
+                    termPrint('Content-Type: text/html');
+                    termPrint('');
+                    termPrint('<!DOCTYPE html>');
+                    termPrint('<html><!-- you\'re already here --></html>');
+                } else {
+                    termPrint('curl: could not resolve host: ' + arg, 'err');
+                    termPrint('(this terminal has no internet. obviously.)', 'dim');
+                }
+                break;
+
+            case 'ping': {
+                if (!arg) { termPrint('ping: missing host', 'err'); break; }
+                termPrint('PING ' + arg + ' (127.0.0.1): 56 bytes of data');
+                let pings = 0;
+                const pingInterval = setInterval(() => {
+                    termPrint('64 bytes from 127.0.0.1: icmp_seq=' + pings + ' ttl=64 time=0.' + Math.floor(Math.random()*9+1) + ' ms');
+                    pings++;
+                    if (pings >= 4) {
+                        clearInterval(pingInterval);
+                        termPrint('--- ' + arg + ' ping statistics ---');
+                        termPrint('4 packets transmitted, 4 received, 0% packet loss');
+                    }
+                }, 500);
+                break;
+            }
+
+            case 'ps':
+                termPrint('  PID TTY          TIME CMD', 'dim');
+                termPrint('    1 ?        00:00:01 systemd');
+                termPrint('  420 ?        00:42:00 gitea');
+                termPrint('  666 pts/0    00:00:00 vim README.md');
+                termPrint(' 1337 pts/1    00:13:37 bash');
+                termPrint(' 9999 pts/2    00:00:00 goot --thinking');
+                break;
+
+            case 'uptime': {
+                const s = Math.floor(performance.now() / 1000);
+                const m = Math.floor(s / 60);
+                const h = Math.floor(m / 60);
+                termPrint('up ' + h + 'h ' + (m % 60) + 'm ' + (s % 60) + 's,  load average: 0.00, 0.00, 0.00');
+                break;
+            }
+
+            case 'goot':
+                if (!args[0]) {
+                    termPrint('goot: a git implementation in C', 'info');
+                    termPrint('usage: goot <command>');
+                    termPrint('commands: init, status, log, commit');
+                    break;
+                }
+                if (args[0] === 'init') termPrint('initialized empty goot repository in .goot/');
+                else if (args[0] === 'status') termPrint('nothing to commit. life is clean.');
+                else if (args[0] === 'log') {
+                    termPrint('commit a1b2c3d  (HEAD -> main)', 'info');
+                    termPrint('Author: seojiaf');
+                    termPrint('Date:   recently');
+                    termPrint('');
+                    termPrint('    it works, ship it');
+                }
+                else if (args[0] === 'commit') termPrint('error: working tree clean. nothing to commit.', 'err');
+                else termPrint('goot: \'' + args[0] + '\' is not a goot command', 'err');
+                break;
+
+            case 'exit':
+            case 'quit':
+            case 'q':
+                closeTerm();
+                break;
+
+            default:
+                termPrint(cmd + ': command not found', 'err');
+                termPrint('type "help" for available commands.', 'dim');
+        }
+        termPrint('');
+    }
+
+    termInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            const val = termInput.value;
+            termInput.value = '';
+            handleCommand(val);
+        }
+        if (e.key === 'ArrowUp') {
+            termHistIdx = Math.min(termHistIdx + 1, termHistory.length - 1);
+            termInput.value = termHistory[termHistIdx] || '';
+            e.preventDefault();
+        }
+        if (e.key === 'ArrowDown') {
+            termHistIdx = Math.max(termHistIdx - 1, -1);
+            termInput.value = termHistIdx === -1 ? '' : termHistory[termHistIdx];
+            e.preventDefault();
+        }
+        if (e.key === 'l' && e.ctrlKey) {
+            e.preventDefault();
+            termClear();
+        }
+        if (e.key === 'c' && e.ctrlKey) {
+            e.preventDefault();
+            termPrint('^C', 'err');
+            termInput.value = '';
+        }
+    });
+
+    // Drag to move terminal
+    (function() {
+        const bar = document.getElementById('term-titlebar');
+        let dragging = false, ox = 0, oy = 0;
+        bar.addEventListener('mousedown', e => {
+            dragging = true;
+            const r = termEl.getBoundingClientRect();
+            ox = e.clientX - r.left;
+            oy = e.clientY - r.top;
+            termEl.style.transform = 'none';
+            termEl.style.left = r.left + 'px';
+            termEl.style.bottom = 'auto';
+            termEl.style.top = r.top + 'px';
+        });
+        document.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            termEl.style.left = (e.clientX - ox) + 'px';
+            termEl.style.top  = (e.clientY - oy) + 'px';
+        });
+        document.addEventListener('mouseup', () => dragging = false);
+    })();
+
+    // ── KONAMI ────────────────────────────────────────────────
+    const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+                    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let ki = 0;
+    document.addEventListener('keydown', e => {
+        if (termOpen) return;
+        ki = (e.key === konami[ki]) ? ki + 1 : 0;
+        if (ki === konami.length) {
+            document.body.classList.toggle('hacker');
+            ki = 0;
+            toast(document.body.classList.contains('hacker') ? '// hacker mode' : '// back to normal');
+        }
+    });
+
+    // ── TYPED KEYWORDS ────────────────────────────────────────
+    let typed = '';
+    document.addEventListener('keydown', e => {
+        if (termOpen || e.key.length > 1) return;
+        typed += e.key.toLowerCase();
+        typed = typed.slice(-8);
+
+        if (typed.endsWith('term'))   { typed = ''; openTerm(); }
+        if (typed.endsWith('goot'))   toast('$ ./goot status<br>nothing to commit. life is clean.', 4000);
+        if (typed.endsWith('sudo'))   toast('sudo: you are not in the sudoers file.<br>this incident will be reported.', 5000);
+        if (typed.endsWith('rave'))   { document.body.classList.toggle('rave'); toast(document.body.classList.contains('rave') ? '🎉 party mode' : 'party over'); }
+        if (typed.endsWith('flip'))   { document.body.classList.toggle('flipped'); toast(document.body.classList.contains('flipped') ? 'why would you do this' : 'ok fine'); }
+        if (typed.endsWith('sad'))    { document.body.classList.toggle('sad'); toast(document.body.classList.contains('sad') ? '// mood' : '// it gets better'); }
+        if (typed.endsWith('matrix')) startMatrix();
+        if (typed.endsWith('hire'))   toast('yes. please. i am available.', 5000);
+        if (typed.endsWith('42'))     toast('the answer to life, the universe, and everything.', 4000);
+        if (typed.endsWith('help'))   toast('codes: term / goot / sudo / rave / flip / sad / matrix / hire / 42<br>konami: ↑↑↓↓←→←→BA<br>click title ×5', 7000);
+    });
+
+    // ── H1 CLICKS ─────────────────────────────────────────────
+    let h1clicks = 0;
+    document.querySelector('h1').addEventListener('click', () => {
+        h1clicks++;
+        if (h1clicks === 3) toast('keep clicking...');
+        if (h1clicks === 5) {
+            const s = document.getElementById('secret');
+            const open = s.style.display === 'block';
+            s.style.display = open ? 'none' : 'block';
+            toast(open ? '// classified' : '// clearance granted');
+            h1clicks = 0;
+        }
+    });
+
+    // ── IDLE ──────────────────────────────────────────────────
+    let idle;
+    function resetIdle() {
+        clearTimeout(idle);
+        idle = setTimeout(() => {
+            document.body.style.cursor = 'help';
+            console.log('%cstill here?', 'font-size:24px; color:green; font-family:monospace;');
+            console.log('%ctype "help" on the page. or "term" to open a terminal.', 'font-size:14px; color:green; font-family:monospace;');
+        }, 30000);
+    }
+    document.addEventListener('mousemove', () => { document.body.style.cursor = ''; resetIdle(); });
+    resetIdle();
+
+    // ── TRIPLE-CLICK TABLE ────────────────────────────────────
+    document.querySelector('table').addEventListener('click', e => {
+        if (e.detail === 3) {
+            const row = document.getElementById('secret-skill-row');
+            row.style.color = '#000';
+            row.style.background = '#fffde7';
+            toast('// forbidden knowledge unlocked');
+        }
+    });
+
+    // ── DOUBLE-CLICK PRE ──────────────────────────────────────
+    document.querySelectorAll('pre').forEach(el => {
+        el.addEventListener('dblclick', () => {
+            navigator.clipboard?.writeText(el.textContent.trim()).then(() => toast('copied. now what?'));
+        });
+    });
+
+    // ── CONSOLE MSG ───────────────────────────────────────────
+    console.log('%c// SEOJIAF', 'font-size:28px; font-weight:bold; font-family:monospace;');
+    console.log('%ctype "term" on the page to open a terminal.', 'font-size:13px; font-family:monospace; color:#555;');
+    console.log('%cor: up up down down left right left right b a', 'font-size:13px; font-family:monospace; color:#555;');
+    console.log('%c⚠  rot13: frdbwnf@belhf.bet', 'font-size:13px; font-family:monospace; color:#c00;');
+
+    // ── MATRIX ────────────────────────────────────────────────
+    function startMatrix() {
+        const canvas = document.getElementById('matrix-canvas');
+        const btn    = document.getElementById('close-matrix');
+        canvas.classList.add('active');
+        btn.classList.add('active');
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx   = canvas.getContext('2d');
+        const cols  = Math.floor(canvas.width / 16);
+        const drops = Array(cols).fill(1);
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()[]{}<>/\\|~`goot';
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f0';
+            ctx.font = '15px monospace';
+            drops.forEach((y, i) => {
+                const ch = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(ch, i * 16, y * 16);
+                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        };
+        window._matrixInterval = setInterval(draw, 40);
+        toast('"goot" appears in the rain if you look closely', 5000);
+    }
+
+    function closeMatrix() {
+        clearInterval(window._matrixInterval);
+        const canvas = document.getElementById('matrix-canvas');
+        const btn    = document.getElementById('close-matrix');
+        canvas.classList.remove('active');
+        btn.classList.remove('active');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        toast('// welcome back');
+    }
+    </script>
+    </body>
+    </html>
