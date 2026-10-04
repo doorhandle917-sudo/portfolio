@@ -1,0 +1,252 @@
+/* Desktop shell: theme tokens, panel, app menu, desktop icons, windows.
+   Accent tokens (--accent, --on-accent, --accent-ink) and --wallpaper are
+   set at runtime by os/prefs.js. */
+
+:root {
+  --font-ui: system-ui, "Noto Sans", Cantarell, "DejaVu Sans", "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "DejaVu Sans Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  --panel-h: 34px;
+  --radius: 8px;
+  --accent: #54487a;
+  --on-accent: #ffffff;
+  --accent-ink: #b0a6dc;
+  --danger: #d0453f;
+  --danger-ink: #ff8a80;
+  --warn: #e6b450;
+
+  /* dark (default) */
+  --bg: #0b0a10;
+  --panel: rgba(17, 16, 23, .93);
+  --surface: #24232b;
+  --surface-2: #2e2d36;
+  --surface-3: #3a3943;
+  --input: #1a1920;
+  --titlebar: #34333d;
+  --titlebar-inactive: #29282f;
+  --text: #eceaf3;
+  --text-dim: #b0adbf;
+  --border: #403f4a;
+  --border-strong: #56545f;
+  --hover: rgba(255, 255, 255, .07);
+  --pressed: rgba(255, 255, 255, .13);
+  --shadow: 0 22px 60px rgba(0, 0, 0, .55), 0 3px 10px rgba(0, 0, 0, .35);
+  --shadow-soft: 0 10px 28px rgba(0, 0, 0, .38);
+}
+
+:root[data-theme="light"] {
+  --bg: #e9e8ef;
+  --panel: rgba(246, 245, 249, .95);
+  --surface: #f7f6fa;
+  --surface-2: #e9e7ef;
+  --surface-3: #dcd9e4;
+  --input: #ffffff;
+  --titlebar: #dddbe4;
+  --titlebar-inactive: #ebeaf0;
+  --text: #1d1b24;
+  --text-dim: #55526a;
+  --border: #cdcad6;
+  --border-strong: #aeaabd;
+  --hover: rgba(20, 10, 50, .06);
+  --pressed: rgba(20, 10, 50, .11);
+  --shadow: 0 22px 60px rgba(25, 15, 60, .25), 0 3px 10px rgba(25, 15, 60, .15);
+  --shadow-soft: 0 10px 28px rgba(25, 15, 60, .16);
+  --warn: #8a5a00;
+  --danger-ink: #b3261e;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 14px/1.45 var(--font-ui);
+  overflow: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--accent-ink); }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+::selection { background: var(--accent); color: var(--on-accent); }
+
+.sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Clearly marked placeholder for data missing from the source repo. */
+.placeholder {
+  display: inline-block; padding: 0 6px; border: 1px dashed var(--warn); border-radius: 4px;
+  background: color-mix(in srgb, var(--warn) 12%, transparent); color: var(--warn);
+  font: 600 12px/1.6 var(--font-mono); letter-spacing: .01em;
+}
+
+/* --- desktop layout ------------------------------------------------------ */
+.desktop { position: fixed; inset: 0; display: flex; flex-direction: column; }
+.workspace {
+  position: relative; flex: 1; min-height: 0; overflow: hidden;
+  background: var(--wallpaper, #2b2540); background-color: #2b2540;
+}
+
+/* --- panel --------------------------------------------------------------- */
+.panel {
+  position: relative; z-index: 9000; flex: none; height: var(--panel-h);
+  display: flex; align-items: center; gap: 6px; padding: 0 6px;
+  background: var(--panel); color: var(--text); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.panel-btn {
+  display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 10px;
+  border: 1px solid transparent; border-radius: 6px; background: transparent; white-space: nowrap;
+}
+.panel-btn:hover { background: var(--hover); }
+.panel-btn[aria-expanded="true"], .panel-btn:active { background: var(--pressed); }
+.panel-menu-btn { font-weight: 600; padding-left: 8px; }
+.panel-menu-btn .logo { color: var(--accent-ink); }
+.taskbar { flex: 1; min-width: 0; display: flex; gap: 4px; overflow: hidden; }
+.task-btn { min-width: 0; max-width: 210px; flex: 0 1 auto; }
+.task-btn .app-icon { width: 18px; height: 18px; flex: none; }
+.task-btn .label { overflow: hidden; text-overflow: ellipsis; }
+.task-btn[aria-pressed="true"] {
+  background: var(--pressed); border-color: var(--border);
+  box-shadow: inset 0 -2px 0 var(--accent-ink);
+}
+.task-btn.is-minimized .label { opacity: .72; font-style: italic; }
+.panel-tray { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.panel-clock { font-variant-numeric: tabular-nums; cursor: default; }
+.panel-clock:hover { background: transparent; }
+
+/* --- app menu ------------------------------------------------------------ */
+.app-menu {
+  position: absolute; z-index: 9500; top: calc(var(--panel-h) + 4px); left: 6px;
+  width: 310px; max-height: calc(100% - var(--panel-h) - 16px);
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: 10px; box-shadow: var(--shadow);
+}
+.app-menu[hidden] { display: none; }
+.app-menu-head {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+}
+.app-menu-head img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid var(--border-strong); }
+.app-menu-name { margin: 0; font-weight: 600; }
+.app-menu-role { margin: 0; font-size: 12.5px; color: var(--text-dim); }
+.app-menu-list { list-style: none; margin: 0; padding: 6px; overflow: auto; }
+.app-menu-items { list-style: none; margin: 0; padding: 0; }
+.app-menu-group {
+  padding: 10px 10px 4px; font-size: 11.5px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.app-menu-item {
+  width: 100%; display: flex; align-items: center; gap: 11px; padding: 6px 10px;
+  border: 0; border-radius: 7px; background: transparent; text-align: left;
+}
+.app-menu-item .app-icon { width: 30px; height: 30px; flex: none; }
+.app-menu-item small { display: block; font-size: 12px; color: var(--text-dim); }
+.app-menu-item:hover { background: var(--hover); }
+.app-menu-item:focus-visible { background: var(--accent); color: var(--on-accent); outline-offset: -2px; }
+.app-menu-item:focus-visible small { color: inherit; opacity: .85; }
+
+/* --- desktop icons ------------------------------------------------------- */
+.desktop-icons {
+  position: absolute; top: 10px; left: 10px; bottom: 10px; margin: 0; padding: 0; list-style: none;
+  display: grid; grid-auto-flow: column; grid-template-rows: repeat(auto-fill, 96px); gap: 4px;
+}
+.desktop-icon {
+  width: 88px; height: 92px; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; gap: 5px;
+  border: 1px solid transparent; border-radius: 7px; background: transparent; color: #fff;
+}
+.desktop-icon .app-icon { width: 48px; height: 48px; flex: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .4)); }
+.desktop-icon .label {
+  max-width: 100%; padding: 1px 6px; border-radius: 4px; font-size: 12.5px; line-height: 1.3;
+  text-align: center; overflow-wrap: anywhere; background: rgba(10, 8, 18, .55);
+}
+.desktop-icon:hover { background: rgba(255, 255, 255, .1); }
+.desktop-icon.is-selected { background: color-mix(in srgb, var(--accent) 55%, transparent); border-color: rgba(255, 255, 255, .35); }
+
+/* --- windows ------------------------------------------------------------- */
+.window-layer { position: absolute; inset: 0; pointer-events: none; }
+.win {
+  position: absolute; top: 0; left: 0; pointer-events: auto;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+.win[hidden] { display: none; }
+.win.is-focused { box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--accent-ink) 45%, var(--border-strong)); }
+.win.is-maximized { border-radius: 0; border-width: 0; }
+.win.is-opening { animation: win-open .16s ease-out; }
+.win.is-dragging, .win.is-resizing { user-select: none; }
+.win.is-dragging .win-body, .win.is-resizing .win-body { pointer-events: none; }
+@keyframes win-open { from { opacity: 0; transform: var(--win-pos) scale(.97); } }
+
+.win-titlebar {
+  flex: none; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 4px 0 10px;
+  background: var(--titlebar-inactive); border-bottom: 1px solid var(--border);
+  user-select: none; -webkit-user-select: none; touch-action: none;
+}
+.win.is-focused .win-titlebar { background: var(--titlebar); }
+.win-titlebar:focus-visible { outline-offset: -2px; }
+.win-icon { display: flex; flex: none; }
+.win-icon .app-icon { width: 18px; height: 18px; }
+.win-title {
+  flex: 1; min-width: 0; margin: 0; font-size: 13px; font-weight: 600; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dim);
+}
+.win.is-focused .win-title { color: var(--text); }
+.win-controls { display: flex; gap: 2px; flex: none; }
+.win-btn {
+  width: 30px; height: 26px; display: grid; place-items: center; padding: 0;
+  border: 0; border-radius: 6px; background: transparent; color: var(--text-dim);
+}
+.win-btn:hover { background: var(--hover); color: var(--text); }
+.win-btn.close:hover { background: var(--danger); color: #fff; }
+.win-body { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+
+.win-resize { position: absolute; z-index: 3; touch-action: none; }
+.win-resize[data-dir="n"] { top: 0; left: 10px; right: 10px; height: 5px; cursor: ns-resize; }
+.win-resize[data-dir="s"] { bottom: 0; left: 10px; right: 10px; height: 6px; cursor: ns-resize; }
+.win-resize[data-dir="e"] { right: 0; top: 10px; bottom: 10px; width: 6px; cursor: ew-resize; }
+.win-resize[data-dir="w"] { left: 0; top: 10px; bottom: 10px; width: 6px; cursor: ew-resize; }
+.win-resize[data-dir="ne"] { top: 0; right: 0; width: 12px; height: 12px; cursor: nesw-resize; }
+.win-resize[data-dir="nw"] { top: 0; left: 0; width: 12px; height: 12px; cursor: nwse-resize; }
+.win-resize[data-dir="se"] { bottom: 0; right: 0; width: 14px; height: 14px; cursor: nwse-resize; }
+.win-resize[data-dir="sw"] { bottom: 0; left: 0; width: 12px; height: 12px; cursor: nesw-resize; }
+.win.is-maximized .win-resize { display: none; }
+
+.app-loading, .app-error { margin: auto; padding: 24px; text-align: center; color: var(--text-dim); }
+.app-error { color: var(--danger-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+/* --- small screens: launcher + one full-screen app ----------------------------- */
+.launcher { display: none; }
+.desktop.is-mobile .desktop-icons { display: none; }
+.desktop.is-mobile .launcher {
+  position: absolute; inset: 0; overflow: auto; padding: 20px 16px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); align-content: start; gap: 12px 8px;
+}
+.launcher-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px;
+  border: 0; border-radius: 14px; background: transparent; color: #fff;
+}
+.launcher-item:active { background: rgba(255, 255, 255, .14); }
+.launcher-item .app-icon { width: 54px; height: 54px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .4)); }
+.launcher-item .label {
+  max-width: 100%; padding: 1px 7px; border-radius: 5px; font-size: 13px; line-height: 1.3; text-align: center;
+  overflow-wrap: anywhere; background: rgba(10, 8, 18, .55);
+}
+.desktop.is-mobile .panel-menu-btn .label, .desktop.is-mobile .task-btn .label { display: none; }
+.desktop.is-mobile .task-btn { padding: 0 8px; }
+.desktop.is-mobile .app-menu { left: 6px; right: 6px; width: auto; }
+.wm-mobile .win, .wm-mobile .win.is-focused { border-width: 0; border-radius: 0; box-shadow: none; }
+.wm-mobile .win:not(.is-focused) { display: none; }
+.wm-mobile .win-resize, .wm-mobile .win-btn.maximize, .wm-mobile .win-icon { display: none; }
+.wm-mobile .win-titlebar { height: 46px; padding: 0 4px; gap: 4px; }
+.wm-mobile .win-controls { display: contents; }
+.wm-mobile .win-btn.minimize { order: -1; }
+.wm-mobile .win-btn { width: 42px; height: 38px; }
+.wm-mobile .win-title { font-size: 14.5px; }
